@@ -11,7 +11,7 @@ exports.GetList = async (req, res, Model) => {
 
         if (searchValue !== "0") {
             let searchRegx = { "$regex": searchValue, "$options": "i" }
-            let searchQuery = { $or: [{ name: searchRegx }, { productCode: searchRegx }] }
+            let searchQuery = { $or: [{ name: searchRegx }, { price: searchRegx }, { stock: searchRegx }, { productCode: searchRegx }] }
             total = (await Model.aggregate([{ $match: searchQuery }, { $count: "total" }]))[0]?.total || 0;
             rows = await Model.aggregate([
                 { $match: searchQuery }, { $skip: skipRow }, { $limit: perPage }
