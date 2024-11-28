@@ -1,5 +1,6 @@
 const express = require("express");
 const app = new express();
+const path = require("path");
 const bodyParser = require("body-parser")
 /* secuirity middleware */
 const rateLimit = require("express-rate-limit");
@@ -10,7 +11,13 @@ const hpp = require("hpp")
 const cors = require("cors")
 const router = require("./src/routes/api")
 /* cors */
-app.use(cors())
+const corsOptions = {
+    origin: process.env.CORS_ALLOW_ORIGIN || 'http://localhost:5173', // Explicitly allow React app's origin
+    methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+};
+app.use(cors(corsOptions))
+
 /* security */
 app.use(helmet())
 app.use(mongoSanitize())
@@ -24,6 +31,7 @@ app.use(bodyParser.urlencoded({ limit: "50md", extended: true }))
 /* request rate limit */
 const limiter = rateLimit({ windowMs: 15 * 60 * 100, max: 300 })
 app.use(limiter)
+app.use('/src/assets/uploads/images', express.static(path.join(__dirname, 'src/assets/uploads/images')));
 /* router */
 app.use("/api/v1", router);
 app.get("/", (req, res) => {

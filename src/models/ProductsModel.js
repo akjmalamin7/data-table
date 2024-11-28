@@ -13,7 +13,7 @@ const ProductsSchema = Schema({
     star: { type: String },
     productCode: { type: String, unique: true, minlength: 6, maxlength: 6 },
     stock: { type: String }
-})
+}, { versionKey: false, timestamps: true })
 
 const ProductsModel = model('Products', ProductsSchema)
 module.exports = ProductsModel
